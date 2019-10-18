@@ -104,44 +104,14 @@ function initBuffers(gl) {
 
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-  // Now create an array of positions for the cube.
+  // Now create an array of positions for the plane.
 
   const positions = [
     // Front face
-    -1.0, -1.0,  1.0,
-     1.0, -1.0,  1.0,
+    -2.0, -2.0,  1.0,
+     1.0, -1.0,  5.0,
      1.0,  1.0,  1.0,
-    -1.0,  1.0,  1.0,
-
-    // Back face
-    -1.0, -1.0, -1.0,
-    -1.0,  1.0, -1.0,
-     1.0,  1.0, -1.0,
-     1.0, -1.0, -1.0,
-
-    // Top face
-    -1.0,  1.0, -1.0,
-    -1.0,  1.0,  1.0,
-     1.0,  1.0,  1.0,
-     1.0,  1.0, -1.0,
-
-    // Bottom face
-    -1.0, -1.0, -1.0,
-     1.0, -1.0, -1.0,
-     1.0, -1.0,  1.0,
-    -1.0, -1.0,  1.0,
-
-    // Right face
-     1.0, -1.0, -1.0,
-     1.0,  1.0, -1.0,
-     1.0,  1.0,  1.0,
-     1.0, -1.0,  1.0,
-
-    // Left face
-    -1.0, -1.0, -1.0,
-    -1.0, -1.0,  1.0,
-    -1.0,  1.0,  1.0,
-    -1.0,  1.0, -1.0,
+    -1.0,  1.0,  2.0,
   ];
 
   // Now pass the list of positions into WebGL to build the
@@ -157,35 +127,10 @@ function initBuffers(gl) {
 
   const textureCoordinates = [
     // Front
-    0.0,  0.0,
-    1.0,  0.0,
-    1.0,  1.0,
-    0.0,  1.0,
-    // Back
-    0.0,  0.0,
-    1.0,  0.0,
-    1.0,  1.0,
-    0.0,  1.0,
-    // Top
-    0.0,  0.0,
-    1.0,  0.0,
-    1.0,  1.0,
-    0.0,  1.0,
-    // Bottom
-    0.0,  0.0,
-    1.0,  0.0,
-    1.0,  1.0,
-    0.0,  1.0,
-    // Right
-    0.0,  0.0,
-    1.0,  0.0,
-    1.0,  1.0,
-    0.0,  1.0,
-    // Left
-    0.0,  0.0,
-    1.0,  0.0,
-    1.0,  1.0,
-    0.0,  1.0,
+    0.0, 0.0,
+    2.0, 0.0,
+    2.0, 2.0,
+    0.0, 2.0,
   ];
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates),
@@ -202,12 +147,7 @@ function initBuffers(gl) {
   // position.
 
   const indices = [
-    0,  1,  2,      0,  2,  3,    // front
-    4,  5,  6,      4,  6,  7,    // back
-    8,  9,  10,     8,  10, 11,   // top
-    12, 13, 14,     12, 14, 15,   // bottom
-    // 16, 17, 18,     16, 18, 19,   // right
-    20, 21, 22,     20, 22, 23,   // left
+    0,  1,  2,    0,  2,  3,  // front
   ];
 
   // Now send the element array to GL
@@ -232,7 +172,7 @@ function loadTexture(gl, url) {
 
   // Because images have to be download over the internet
   // they might take a moment until they are ready.
-  // Until then put a single pixel in the texture so we can
+  // Until then put a single pixel in the texture so we canrray
   // use it immediately. When the image has finished downloading
   // we'll update the texture with the contents of the image.
   const level = 0;
@@ -296,10 +236,10 @@ function drawScene(gl, programInfo, buffers, texture, deltaTime) {
   // and we only want to see objects between 0.1 units
   // and 100 units away from the camera.
 
-  const fieldOfView = 45 * Math.PI / 180;   // in radians
+  const fieldOfView = 1.0 * 45 * Math.PI / 180;   // in radians
   const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
   const zNear = 0.1;
-  const zFar = 100.0;
+  const zFar =  40.1;
   const projectionMatrix = mat4.create();
 
   // note: glmatrix.js always has the first argument
@@ -315,19 +255,20 @@ function drawScene(gl, programInfo, buffers, texture, deltaTime) {
   const modelViewMatrix = mat4.create();
 
   // Now move the drawing position a bit to where we want to
-  // start drawing the square.
+    // start drawing the square.
 
   mat4.translate(modelViewMatrix,     // destination matrix
                  modelViewMatrix,     // matrix to translate
                  [-0.0, 0.0, -6.0]);  // amount to translate
+
   mat4.rotate(modelViewMatrix,  // destination matrix
               modelViewMatrix,  // matrix to rotate
               cubeRotation,     // amount to rotate in radians
               [0, 0, 1]);       // axis to rotate around (Z)
-  mat4.rotate(modelViewMatrix,  // destination matrix
-              modelViewMatrix,  // matrix to rotate
-              cubeRotation * .7,// amount to rotate in radians
-              [0, 1, 0]);       // axis to rotate around (X)
+  //mat4.rotate(modelViewMatrix,     // destination matrix
+  //            modelViewMatrix,     // matrix to rotate
+  //            cubeRotation * 3.7,  // amount to rotate in radians
+  //            [0, 1, 0]);          // axis to rotate around (X)
 
   // Tell WebGL how to pull out the positions from the position
   // buffer into the vertexPosition attribute
